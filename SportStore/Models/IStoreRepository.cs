@@ -8,6 +8,12 @@ namespace SportStore.Models
 {
     public interface IStoreRepository
     {
+        //int TotalCount();
+
+        int TotalCount { get; }
+
         IQueryable<Product> Products { get; }
+
+        IQueryable<Product> GetProducts(string category, int productPage, int pageSize);
     }
 }

@@ -34,6 +34,10 @@ namespace SportStore
             });
 
             services.AddScoped<IStoreRepository, EFStroreRepository>();
+
+            services.AddRazorPages();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,19 +49,40 @@ namespace SportStore
             app.UseStatusCodePages();
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("catpage",
+                    "{category}/Page{productPage:int}",
+                    new { Controller = "Home", action = "Index" });
+
+                endpoints.MapControllerRoute("page",
+                    "Page{productPage:int}",
+                    new { controller = "Home", action = "index", productPage = 1 });
+                
+                
+                endpoints.MapControllerRoute("category",
+                    "{category}",
+                    new { controller = "home", action = "index", productPage = 1 });
+
+                endpoints.MapControllerRoute("pagination",
+                    "Products/Page{productPage}",
+                    new { Controller = "Home", action = "Index",productPage=1 });
+
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
+
+
                 //endpoints.MapGet("/", async context =>
                 //{
                 //    await context.Response.WriteAsync("Hello World!");
                 //});
             });
 
-            SeedData.EnsurePopulated(app);
+           // SeedData.EnsurePopulated(app);
         }
     }
 }
